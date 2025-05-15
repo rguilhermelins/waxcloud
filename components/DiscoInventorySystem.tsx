@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Camera, Save, Search, PlusCircle, Trash2, List, BarChart2, Check } from 'lucide-react';
+import { Camera, Save, Search, PlusCircle, Trash2, List, BarChart2, Check, Upload } from 'lucide-react';
 
 export default function DiscoInventorySystem() {
   const [activeTab, setActiveTab] = useState('cadastro');
@@ -176,132 +176,84 @@ export default function DiscoInventorySystem() {
   // Layout da tela de cadastro
   const renderCadastroTab = () => {
     return (
-      <div className="flex flex-col md:flex-row gap-10 items-start">
+      <div className="flex flex-col lg:flex-row gap-3 items-start">
         {/* Card de upload */}
-        <div className="w-full md:w-1/3">
-          <div className="bg-white rounded-xl p-6 flex flex-col items-center justify-center h-72 relative shadow-md border border-fifth">
+        <div className="w-full lg:w-1/3">
+          <div className="bg-pastel-100 rounded-xl p-2 flex flex-col items-center justify-center h-64 relative shadow hover:shadow-lg transition-shadow duration-200 border border-pastel-200">
             {formData.foto ? (
               <img 
                 src={formData.foto} 
-                alt="Capa do disco" 
-                className="max-h-60 rounded-xl object-contain shadow-lg border border-quaternary"
+                alt="Preview" 
+                className="max-w-full max-h-full object-contain rounded-lg"
               />
             ) : (
-              <div className="flex flex-col items-center">
-                <Camera size={56} className="text-quaternary mb-4" />
-                <p className="text-primary text-lg font-semibold text-center">Selecione uma fonte para adicionar foto</p>
-                <p className="text-quaternary text-xs mt-2">Resolução recomendada: 600x600</p>
+              <div className="text-center flex flex-col items-center justify-center h-full w-full">
+                <Upload className="w-12 h-12 text-pastel-400 mb-2" />
+                <p className="text-pastel-600 text-sm">Arraste uma imagem ou clique para selecionar</p>
               </div>
             )}
-            {isScanning && (
-              <div className="absolute inset-0 bg-primary/80 rounded-xl flex items-center justify-center z-10">
-                <div className="text-white text-center animate-pulse">
-                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white mx-auto mb-3"></div>
-                  <p className="font-bold">Analisando imagem...</p>
-                  <p className="text-xs mt-1">Buscando informações do álbum</p>
-                </div>
-              </div>
-            )}
-          </div>
-          <div className="relative mt-4">
             <input
               type="file"
-              ref={fileInputRef}
-              onChange={handleFileChange}
               accept="image/*"
-              className="hidden"
+              onChange={handleFileChange}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
-            <button 
-              onClick={() => setShowPhotoOptions(!showPhotoOptions)}
-              className="w-full bg-primary text-white py-3 px-4 rounded-full flex items-center justify-center gap-2 shadow hover:bg-secondary transition-all font-semibold text-lg"
-              disabled={isScanning}
-            >
-              <Camera size={20} />
-              {isScanning ? 'Analisando...' : formData.foto ? 'Trocar foto' : 'Adicionar foto'}
-            </button>
-            {showPhotoOptions && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg z-20 p-3 border border-fifth flex flex-col gap-2">
-                <div 
-                  className="p-2 hover:bg-fifth rounded-lg cursor-pointer flex items-center gap-2 transition-all"
-                  onClick={() => handleUploadClick('file')}
-                >
-                  <Camera size={16} />
-                  Carregar do computador
-                </div>
-                <div 
-                  className="p-2 hover:bg-fifth rounded-lg cursor-pointer flex items-center gap-2 transition-all"
-                  onClick={() => handleUploadClick('camera')}
-                >
-                  <Camera size={16} />
-                  Usar câmera USB
-                </div>
-              </div>
-            )}
           </div>
         </div>
         {/* Formulário */}
-        <div className="w-full md:w-2/3">
+        <div className="w-full lg:w-2/3">
           {showNotification && (
-            <div className="mb-4 bg-secondary/30 border-l-4 border-primary text-primary p-4 rounded-xl flex items-center justify-between shadow">
+            <div className="mb-4 bg-pastel-100 border-l-4 border-pastel-400 text-pastel-800 p-4 rounded-xl flex items-center justify-between shadow">
               <div className="flex items-center gap-2">
-                <Check size={24} className="text-quaternary" />
+                <Check size={24} className="text-pastel-500" />
                 <span className="font-semibold">Artista e álbum identificados automaticamente!</span>
               </div>
-              <button onClick={() => setShowNotification(false)} className="text-fifth hover:text-primary text-2xl font-bold">&times;</button>
+              <button onClick={() => setShowNotification(false)} className="text-pastel-400 hover:text-pastel-600 text-2xl font-bold">&times;</button>
             </div>
           )}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-xs font-semibold text-primary mb-1 uppercase tracking-wide">Artista</label>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-pastel-800">Artista</label>
               <input
                 type="text"
-                name="artista"
                 value={formData.artista}
-                onChange={handleInputChange}
-                className="w-full border border-fifth rounded-xl p-3 focus:ring-2 focus:ring-primary focus:border-quaternary shadow-sm text-lg"
-                placeholder="Nome do artista"
+                onChange={(e) => setFormData({...formData, artista: e.target.value})}
+                className="w-full px-2 py-1.5 rounded-lg border border-pastel-200 focus:border-pastel-400 focus:ring-2 focus:ring-pastel-200/40 outline-none transition-colors duration-200"
               />
             </div>
-            <div>
-              <label className="block text-xs font-semibold text-primary mb-1 uppercase tracking-wide">Álbum</label>
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-pastel-800">Álbum</label>
               <input
                 type="text"
-                name="album"
                 value={formData.album}
-                onChange={handleInputChange}
-                className="w-full border border-fifth rounded-xl p-3 focus:ring-2 focus:ring-primary focus:border-quaternary shadow-sm text-lg"
-                placeholder="Nome do álbum"
+                onChange={(e) => setFormData({...formData, album: e.target.value})}
+                className="w-full px-2 py-1.5 rounded-lg border border-pastel-200 focus:border-pastel-400 focus:ring-2 focus:ring-pastel-200/40 outline-none transition-colors duration-200"
               />
             </div>
-            <div>
-              <label className="block text-xs font-semibold text-primary mb-1 uppercase tracking-wide">Ano</label>
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-pastel-800">Ano</label>
               <input
                 type="text"
-                name="ano"
                 value={formData.ano}
-                onChange={handleInputChange}
-                className="w-full border border-fifth rounded-xl p-3 focus:ring-2 focus:ring-primary focus:border-quaternary shadow-sm text-lg"
-                placeholder="Ano de lançamento"
+                onChange={(e) => setFormData({...formData, ano: e.target.value})}
+                className="w-full px-2 py-1.5 rounded-lg border border-pastel-200 focus:border-pastel-400 focus:ring-2 focus:ring-pastel-200/40 outline-none transition-colors duration-200"
               />
             </div>
-            <div>
-              <label className="block text-xs font-semibold text-primary mb-1 uppercase tracking-wide">Valor (R$)</label>
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-pastel-800">Valor (R$)</label>
               <input
                 type="text"
-                name="valor"
                 value={formData.valor}
-                onChange={handleInputChange}
-                className="w-full border border-fifth rounded-xl p-3 focus:ring-2 focus:ring-primary focus:border-quaternary shadow-sm text-lg"
-                placeholder="0,00"
+                onChange={(e) => setFormData({...formData, valor: e.target.value})}
+                className="w-full px-2 py-1.5 rounded-lg border border-pastel-200 focus:border-pastel-400 focus:ring-2 focus:ring-pastel-200/40 outline-none transition-colors duration-200"
               />
             </div>
-            <div>
-              <label className="block text-xs font-semibold text-primary mb-1 uppercase tracking-wide">Estado da Capa</label>
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-pastel-800">Estado da Capa</label>
               <select
-                name="estadoCapa"
                 value={formData.estadoCapa}
-                onChange={handleInputChange}
-                className="w-full border border-fifth rounded-xl p-3 focus:ring-2 focus:ring-primary focus:border-quaternary shadow-sm text-lg"
+                onChange={(e) => setFormData({...formData, estadoCapa: e.target.value})}
+                className="w-full px-2 py-1.5 rounded-lg border border-pastel-200 focus:border-pastel-400 focus:ring-2 focus:ring-pastel-200/40 outline-none transition-colors duration-200"
               >
                 {estadoOptions.map(option => (
                   <option key={option.value} value={option.value}>
@@ -310,13 +262,12 @@ export default function DiscoInventorySystem() {
                 ))}
               </select>
             </div>
-            <div>
-              <label className="block text-xs font-semibold text-primary mb-1 uppercase tracking-wide">Estado da Mídia</label>
+            <div className="space-y-1">
+              <label className="block text-sm font-medium text-pastel-800">Estado da Mídia</label>
               <select
-                name="estadoMidia"
                 value={formData.estadoMidia}
-                onChange={handleInputChange}
-                className="w-full border border-fifth rounded-xl p-3 focus:ring-2 focus:ring-primary focus:border-quaternary shadow-sm text-lg"
+                onChange={(e) => setFormData({...formData, estadoMidia: e.target.value})}
+                className="w-full px-2 py-1.5 rounded-lg border border-pastel-200 focus:border-pastel-400 focus:ring-2 focus:ring-pastel-200/40 outline-none transition-colors duration-200"
               >
                 {estadoOptions.map(option => (
                   <option key={option.value} value={option.value}>
@@ -326,22 +277,30 @@ export default function DiscoInventorySystem() {
               </select>
             </div>
           </div>
-          <div className="mt-6">
-            <label className="block text-xs font-semibold text-primary mb-1 uppercase tracking-wide">Observações</label>
+          <div className="mt-2">
+            <label className="block text-sm font-medium text-pastel-800">Observações</label>
             <textarea
-              name="observacoes"
               value={formData.observacoes}
-              onChange={handleInputChange}
-              className="w-full border border-fifth rounded-xl p-3 focus:ring-2 focus:ring-primary focus:border-quaternary shadow-sm text-lg"
+              onChange={(e) => setFormData({...formData, observacoes: e.target.value})}
+              className="w-full px-2 py-1.5 rounded-lg border border-pastel-200 focus:border-pastel-400 focus:ring-2 focus:ring-pastel-200/40 outline-none transition-colors duration-200"
               rows={3}
               placeholder="Detalhes adicionais, características específicas deste exemplar..."
             ></textarea>
           </div>
-          <div className="mt-8 flex justify-end gap-4">
-            <button className="bg-quaternary text-white py-3 px-8 rounded-full font-bold shadow hover:bg-fifth transition-all text-lg">Limpar</button>
-            <button className="bg-primary text-white py-3 px-8 rounded-full font-bold shadow hover:bg-secondary transition-all text-lg flex items-center gap-2">
-              <Save size={20} />
-              Salvar Produto
+          <div className="mt-3 flex justify-end gap-2">
+            <button
+              onClick={() => setFormData({...formData, artista: '', album: '', ano: '', valor: '', estadoCapa: 'M', estadoMidia: 'M', observacoes: '', foto: null})}
+              className="px-3 py-1.5 bg-pastel-200 text-pastel-800 rounded-lg hover:bg-pastel-300 transition-colors duration-200 focus:ring-2 focus:ring-pastel-200/20 outline-none"
+            >
+              Limpar
+            </button>
+            <button
+              onClick={() => {
+                console.log('Produto salvo:', formData);
+              }}
+              className="px-3 py-1.5 bg-pastel-500 text-pastel-900 rounded-lg hover:bg-pastel-400 transition-colors duration-200 focus:ring-2 focus:ring-pastel-200/20 outline-none"
+            >
+              Salvar
             </button>
           </div>
         </div>
@@ -352,51 +311,51 @@ export default function DiscoInventorySystem() {
   // Layout da tela de inventário
   const renderInventarioTab = () => {
     return (
-      <div className="p-4">
-        <div className="mb-4 flex justify-between items-center">
+      <div className="p-2">
+        <div className="mb-3 flex justify-between items-center">
           <div className="relative w-64">
             <input
               type="text"
               placeholder="Buscar no inventário..."
-              className="w-full border border-pastel-300 rounded p-2 pl-8 focus:ring-2 focus:ring-pastel-400 focus:border-transparent"
+              className="w-full px-2 py-1.5 rounded-lg border border-pastel-200 focus:border-pastel-400 focus:ring-2 focus:ring-pastel-200/40 outline-none transition-colors duration-200 pl-8 text-pastel-800 bg-pastel-100"
             />
-            <Search size={16} className="absolute left-2 top-3 text-pastel-400" />
+            <Search size={16} className="absolute left-2 top-1/2 -translate-y-1/2 text-pastel-400" />
           </div>
           
-          <button className="bg-pastel-500 text-pastel-900 py-2 px-4 rounded flex items-center gap-2 hover:bg-pastel-400 transition-colors">
+          <button className="px-3 py-1.5 bg-pastel-500 text-pastel-900 rounded-lg flex items-center gap-2 hover:bg-pastel-400 transition-colors duration-200 focus:ring-2 focus:ring-pastel-200/20 outline-none">
             <PlusCircle size={16} />
             Novo Produto
           </button>
         </div>
         
-        <div className="bg-white rounded-lg shadow overflow-hidden border border-pastel-200">
+        <div className="bg-pastel-100 rounded-lg shadow overflow-hidden border border-pastel-200">
           <table className="min-w-full divide-y divide-pastel-200">
-            <thead className="bg-pastel-100">
+            <thead className="bg-pastel-200">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-pastel-800 uppercase tracking-wider">Foto</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-pastel-800 uppercase tracking-wider">Artista</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-pastel-800 uppercase tracking-wider">Álbum</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-pastel-800 uppercase tracking-wider">Ano</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-pastel-800 uppercase tracking-wider">Valor</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-pastel-800 uppercase tracking-wider">Estado</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-pastel-800 uppercase tracking-wider">Ações</th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-pastel-800 uppercase tracking-wider">Foto</th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-pastel-800 uppercase tracking-wider">Artista</th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-pastel-800 uppercase tracking-wider">Álbum</th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-pastel-800 uppercase tracking-wider">Ano</th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-pastel-800 uppercase tracking-wider">Valor</th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-pastel-800 uppercase tracking-wider">Estado</th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-pastel-800 uppercase tracking-wider">Ações</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-pastel-200">
+            <tbody className="bg-pastel-100 divide-y divide-pastel-200">
               {mockInventory.map(item => (
-                <tr key={item.id} className="hover:bg-pastel-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="h-12 w-12 bg-pastel-100 rounded flex items-center justify-center">
-                      <img src="/api/placeholder/48/48" alt="" className="h-10 w-10 rounded" />
+                <tr key={item.id} className="hover:bg-pastel-200 transition-colors duration-200">
+                  <td className="px-3 py-2 whitespace-nowrap">
+                    <div className="h-10 w-10 bg-pastel-200 rounded-lg flex items-center justify-center">
+                      <img src="/api/placeholder/48/48" alt="" className="h-8 w-8 rounded" />
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">{item.artista}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{item.album}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{item.ano}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">R$ {item.valor}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 py-2 whitespace-nowrap text-sm text-pastel-900">{item.artista}</td>
+                  <td className="px-3 py-2 whitespace-nowrap text-sm text-pastel-900">{item.album}</td>
+                  <td className="px-3 py-2 whitespace-nowrap text-sm text-pastel-900">{item.ano}</td>
+                  <td className="px-3 py-2 whitespace-nowrap text-sm text-pastel-900">R$ {item.valor}</td>
+                  <td className="px-3 py-2 whitespace-nowrap">
                     <div className="flex gap-1">
-                      <span className="px-2 py-1 text-xs rounded bg-pastel-100 text-pastel-800">
+                      <span className="px-2 py-1 text-xs rounded bg-pastel-200 text-pastel-800">
                         Capa: {item.estadoCapa}
                       </span>
                       <span className="px-2 py-1 text-xs rounded bg-pastel-200 text-pastel-800">
@@ -404,9 +363,9 @@ export default function DiscoInventorySystem() {
                       </span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button className="text-pastel-600 hover:text-pastel-800 mr-3">Editar</button>
-                    <button className="text-red-500 hover:text-red-700">Vender</button>
+                  <td className="px-3 py-2 whitespace-nowrap text-right text-sm font-medium">
+                    <button className="text-pastel-500 hover:text-pastel-800 mr-3 transition-colors duration-200">Editar</button>
+                    <button className="text-red-500 hover:text-red-700 transition-colors duration-200">Vender</button>
                   </td>
                 </tr>
               ))}
@@ -420,20 +379,20 @@ export default function DiscoInventorySystem() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-tertiary to-quaternary">
       {/* Header */}
-      <div className="bg-primary text-white p-4 shadow-lg">
-        <div className="max-w-[2000px] mx-auto">
-          <h1 className="text-2xl font-bold">Wax Cloud</h1>
+      <div className="bg-white border-b border-neutral-200">
+        <div className="max-w-[2000px] mx-auto px-2 py-2">
+          <h1 className="text-2xl font-semibold text-neutral-900">Wax Cloud</h1>
         </div>
       </div>
       
       {/* Navigation Tabs */}
-      <div className="bg-secondary border-b">
-        <div className="max-w-[2000px] mx-auto flex">
+      <div className="bg-white border-b border-neutral-200">
+        <div className="max-w-[2000px] mx-auto flex px-2">
           <button 
-            className={`px-6 py-4 font-medium text-sm flex items-center gap-2 ${
+            className={`px-3 py-2 font-medium text-sm flex items-center gap-2 transition-colors duration-200 ${
               activeTab === 'cadastro' 
                 ? 'text-primary border-b-2 border-primary' 
-                : 'text-quaternary hover:text-primary'
+                : 'text-neutral-600 hover:text-primary'
             }`}
             onClick={() => setActiveTab('cadastro')}
           >
@@ -441,10 +400,10 @@ export default function DiscoInventorySystem() {
             Cadastro de Produtos
           </button>
           <button 
-            className={`px-6 py-4 font-medium text-sm flex items-center gap-2 ${
+            className={`px-3 py-2 font-medium text-sm flex items-center gap-2 transition-colors duration-200 ${
               activeTab === 'inventario' 
                 ? 'text-primary border-b-2 border-primary' 
-                : 'text-quaternary hover:text-primary'
+                : 'text-neutral-600 hover:text-primary'
             }`}
             onClick={() => setActiveTab('inventario')}
           >
@@ -452,10 +411,10 @@ export default function DiscoInventorySystem() {
             Inventário
           </button>
           <button 
-            className={`px-6 py-4 font-medium text-sm flex items-center gap-2 ${
+            className={`px-3 py-2 font-medium text-sm flex items-center gap-2 transition-colors duration-200 ${
               activeTab === 'relatorios' 
                 ? 'text-primary border-b-2 border-primary' 
-                : 'text-quaternary hover:text-primary'
+                : 'text-neutral-600 hover:text-primary'
             }`}
             onClick={() => setActiveTab('relatorios')}
           >
@@ -466,178 +425,23 @@ export default function DiscoInventorySystem() {
       </div>
       
       {/* Main Content */}
-      <div className="flex-1 p-8 bg-gradient-to-br from-tertiary to-quaternary flex items-center justify-center">
-        <div className="w-full max-w-6xl bg-white rounded-2xl shadow-2xl border border-quaternary p-10 flex flex-col gap-8">
-          <div className="flex flex-col md:flex-row gap-10 items-start">
-            {/* Card de upload */}
-            <div className="w-full md:w-1/3">
-              <div className="bg-white rounded-xl p-6 flex flex-col items-center justify-center h-72 relative shadow-md border border-fifth">
-                {formData.foto ? (
-                  <img 
-                    src={formData.foto} 
-                    alt="Capa do disco" 
-                    className="max-h-60 rounded-xl object-contain shadow-lg border border-quaternary"
-                  />
-                ) : (
-                  <div className="flex flex-col items-center">
-                    <Camera size={56} className="text-quaternary mb-4" />
-                    <p className="text-primary text-lg font-semibold text-center">Selecione uma fonte para adicionar foto</p>
-                    <p className="text-quaternary text-xs mt-2">Resolução recomendada: 600x600</p>
-                  </div>
-                )}
-                {isScanning && (
-                  <div className="absolute inset-0 bg-primary/80 rounded-xl flex items-center justify-center z-10">
-                    <div className="text-white text-center animate-pulse">
-                      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white mx-auto mb-3"></div>
-                      <p className="font-bold">Analisando imagem...</p>
-                      <p className="text-xs mt-1">Buscando informações do álbum</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className="relative mt-4">
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  accept="image/*"
-                  className="hidden"
-                />
-                <button 
-                  onClick={() => setShowPhotoOptions(!showPhotoOptions)}
-                  className="w-full bg-primary text-white py-3 px-4 rounded-full flex items-center justify-center gap-2 shadow hover:bg-secondary transition-all font-semibold text-lg"
-                  disabled={isScanning}
-                >
-                  <Camera size={20} />
-                  {isScanning ? 'Analisando...' : formData.foto ? 'Trocar foto' : 'Adicionar foto'}
-                </button>
-                {showPhotoOptions && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg z-20 p-3 border border-fifth flex flex-col gap-2">
-                    <div 
-                      className="p-2 hover:bg-fifth rounded-lg cursor-pointer flex items-center gap-2 transition-all"
-                      onClick={() => handleUploadClick('file')}
-                    >
-                      <Camera size={16} />
-                      Carregar do computador
-                    </div>
-                    <div 
-                      className="p-2 hover:bg-fifth rounded-lg cursor-pointer flex items-center gap-2 transition-all"
-                      onClick={() => handleUploadClick('camera')}
-                    >
-                      <Camera size={16} />
-                      Usar câmera USB
-                    </div>
-                  </div>
-                )}
-              </div>
+      <div className="flex-1 p-2 bg-neutral-50">
+        <div className="max-w-[2000px] mx-auto h-full bg-white rounded-2xl shadow-apple border border-neutral-200 p-3 animate-fade-in">
+          {activeTab === 'cadastro' && (
+            <div className="animate-slide-up">
+              {renderCadastroTab()}
             </div>
-            {/* Formulário */}
-            <div className="w-full md:w-2/3">
-              {showNotification && (
-                <div className="mb-4 bg-secondary/30 border-l-4 border-primary text-primary p-4 rounded-xl flex items-center justify-between shadow">
-                  <div className="flex items-center gap-2">
-                    <Check size={24} className="text-quaternary" />
-                    <span className="font-semibold">Artista e álbum identificados automaticamente!</span>
-                  </div>
-                  <button onClick={() => setShowNotification(false)} className="text-fifth hover:text-primary text-2xl font-bold">&times;</button>
-                </div>
-              )}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-xs font-semibold text-primary mb-1 uppercase tracking-wide">Artista</label>
-                  <input
-                    type="text"
-                    name="artista"
-                    value={formData.artista}
-                    onChange={handleInputChange}
-                    className="w-full border border-fifth rounded-xl p-3 focus:ring-2 focus:ring-primary focus:border-quaternary shadow-sm text-lg"
-                    placeholder="Nome do artista"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-primary mb-1 uppercase tracking-wide">Álbum</label>
-                  <input
-                    type="text"
-                    name="album"
-                    value={formData.album}
-                    onChange={handleInputChange}
-                    className="w-full border border-fifth rounded-xl p-3 focus:ring-2 focus:ring-primary focus:border-quaternary shadow-sm text-lg"
-                    placeholder="Nome do álbum"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-primary mb-1 uppercase tracking-wide">Ano</label>
-                  <input
-                    type="text"
-                    name="ano"
-                    value={formData.ano}
-                    onChange={handleInputChange}
-                    className="w-full border border-fifth rounded-xl p-3 focus:ring-2 focus:ring-primary focus:border-quaternary shadow-sm text-lg"
-                    placeholder="Ano de lançamento"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-primary mb-1 uppercase tracking-wide">Valor (R$)</label>
-                  <input
-                    type="text"
-                    name="valor"
-                    value={formData.valor}
-                    onChange={handleInputChange}
-                    className="w-full border border-fifth rounded-xl p-3 focus:ring-2 focus:ring-primary focus:border-quaternary shadow-sm text-lg"
-                    placeholder="0,00"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-primary mb-1 uppercase tracking-wide">Estado da Capa</label>
-                  <select
-                    name="estadoCapa"
-                    value={formData.estadoCapa}
-                    onChange={handleInputChange}
-                    className="w-full border border-fifth rounded-xl p-3 focus:ring-2 focus:ring-primary focus:border-quaternary shadow-sm text-lg"
-                  >
-                    {estadoOptions.map(option => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-primary mb-1 uppercase tracking-wide">Estado da Mídia</label>
-                  <select
-                    name="estadoMidia"
-                    value={formData.estadoMidia}
-                    onChange={handleInputChange}
-                    className="w-full border border-fifth rounded-xl p-3 focus:ring-2 focus:ring-primary focus:border-quaternary shadow-sm text-lg"
-                  >
-                    {estadoOptions.map(option => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <div className="mt-6">
-                <label className="block text-xs font-semibold text-primary mb-1 uppercase tracking-wide">Observações</label>
-                <textarea
-                  name="observacoes"
-                  value={formData.observacoes}
-                  onChange={handleInputChange}
-                  className="w-full border border-fifth rounded-xl p-3 focus:ring-2 focus:ring-primary focus:border-quaternary shadow-sm text-lg"
-                  rows={3}
-                  placeholder="Detalhes adicionais, características específicas deste exemplar..."
-                ></textarea>
-              </div>
-              <div className="mt-8 flex justify-end gap-4">
-                <button className="bg-quaternary text-white py-3 px-8 rounded-full font-bold shadow hover:bg-fifth transition-all text-lg">Limpar</button>
-                <button className="bg-primary text-white py-3 px-8 rounded-full font-bold shadow hover:bg-secondary transition-all text-lg flex items-center gap-2">
-                  <Save size={20} />
-                  Salvar Produto
-                </button>
-              </div>
+          )}
+          {activeTab === 'inventario' && (
+            <div className="animate-slide-up">
+              {renderInventarioTab()}
             </div>
-          </div>
+          )}
+          {activeTab === 'relatorios' && (
+            <div className="animate-slide-up">
+              <div className="p-4">Conteúdo da tela de relatórios...</div>
+            </div>
+          )}
         </div>
       </div>
     </div>
