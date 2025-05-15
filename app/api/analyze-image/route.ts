@@ -148,6 +148,7 @@ async function searchDiscogs(artist: string, album: string) {
       params: {
         artist: artist,
         release_title: album,
+        format: "vinyl",
         type: "release",
         token: token.token,
       },
