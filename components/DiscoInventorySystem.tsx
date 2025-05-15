@@ -156,7 +156,12 @@ export default function DiscoInventorySystem() {
 
   // Handler para o clique no botão de upload
   const handleUploadClick = (source: 'file' | 'camera') => {
-    if (source === 'file' && fileInputRef.current) {
+    if (fileInputRef.current) {
+      if (source === 'file') {
+        fileInputRef.current.removeAttribute('capture');
+      } else if (source === 'camera') {
+        fileInputRef.current.setAttribute('capture', 'environment');
+      }
       fileInputRef.current.click();
     }
     setShowPhotoOptions(false);
@@ -177,9 +182,9 @@ export default function DiscoInventorySystem() {
   const renderCadastroTab = () => {
     return (
       <div className="flex flex-col lg:flex-row gap-3 items-start">
-        {/* Card de upload */}
-        <div className="w-full lg:w-1/3">
-          <div className="bg-pastel-100 rounded-xl p-2 flex flex-col items-center justify-center h-64 relative shadow hover:shadow-lg transition-shadow duration-200 border border-pastel-200">
+        {/* Card de upload + botão */}
+        <div className="w-full lg:w-1/3 flex flex-col items-center">
+          <div className="bg-pastel-100 rounded-xl p-2 flex flex-col items-center justify-center h-64 relative shadow hover:shadow-lg transition-shadow duration-200 border border-pastel-200 w-full">
             {formData.foto ? (
               <img 
                 src={formData.foto} 
@@ -193,11 +198,39 @@ export default function DiscoInventorySystem() {
               </div>
             )}
             <input
+              ref={fileInputRef}
               type="file"
               accept="image/*"
               onChange={handleFileChange}
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
+          </div>
+          {/* Botão de escolha de fonte da foto */}
+          <div className="relative w-full flex justify-center mt-2">
+            <button
+              type="button"
+              className="px-3 py-1.5 bg-pastel-500 text-pastel-900 rounded-lg flex items-center gap-2 hover:bg-pastel-400 transition-colors duration-200 focus:ring-2 focus:ring-pastel-200/20 outline-none shadow"
+              onClick={() => setShowPhotoOptions((v) => !v)}
+            >
+              <Upload className="w-5 h-5" />
+              Adicionar Foto
+            </button>
+            {showPhotoOptions && (
+              <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-white border border-pastel-200 rounded-lg shadow-lg z-10 min-w-[160px] animate-fade-in">
+                <button
+                  className="w-full px-4 py-2 text-left text-pastel-900 hover:bg-pastel-100 rounded-t-lg"
+                  onClick={() => handleUploadClick('file')}
+                >
+                  Selecionar Arquivo
+                </button>
+                <button
+                  className="w-full px-4 py-2 text-left text-pastel-900 hover:bg-pastel-100 rounded-b-lg"
+                  onClick={() => handleUploadClick('camera')}
+                >
+                  Usar Câmera/Webcam
+                </button>
+              </div>
+            )}
           </div>
         </div>
         {/* Formulário */}
