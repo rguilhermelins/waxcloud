@@ -160,17 +160,6 @@ async function searchDiscogs(artist: string, album: string) {
       return;
     }
 
-    // Print first 5 results
-    // results.slice(0, 5).forEach((release: { title: any; year: any; country: any; format: any[]; label: any[]; resource_url: any; }, index: number) => {
-    //   console.log(`\nResult ${index + 1}`);
-    //   console.log(`Title: ${release.title}`);
-    //   console.log(`Year: ${release.year}`);
-    //   console.log(`Country: ${release.country}`);
-    //   console.log(`Format: ${release.format?.join(', ')}`);
-    //   console.log(`Label: ${release.label?.join(', ')}`);
-    //   console.log(`Resource URL: ${release.resource_url}`);
-    // });
-
     return results[0]; // Retorna o primeiro resultado
   } catch (error) {
     if (error instanceof Error) {
