@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
 import Image from 'next/image';
+import { FormEvent, useState } from 'react';
 
 interface Disco {
   id: number;
@@ -119,7 +119,7 @@ export default function DiscoInventorySystem() {
             'hip hop': 'Hip Hop'
           };
 
-          const detectedGenre = labels.find(label => 
+          const detectedGenre = labels.find((label: string) => 
             Object.keys(genreMap).some(genre => 
               label.toLowerCase().includes(genre)
             )
